@@ -1,5 +1,7 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { db } from './firebase';
+import { ref, onValue, set, push } from 'firebase/database';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -13,9 +15,6 @@ function App() {
     if ((login.username === "ron" || login.username === "tricia") && login.password === "dobby") {
       setUser({ id: login.username, email: login.username + "@example.com" });
       setError("");
-      // Fetch shared family list from localStorage
-      const saved = localStorage.getItem("familyShoppingList");
-      setList(saved ? JSON.parse(saved) : []);
     } else {
       setError("Invalid credentials");
     }
@@ -29,12 +28,23 @@ function App() {
 
   const handleAddItem = () => {
     if (item.trim() && user) {
-      const newList = [...list, { text: item, addedBy: user.id }];
-      setList(newList);
+      const listRef = ref(db, 'familyShoppingList');
+      const newItem = { text: item, addedBy: user.id };
+      push(listRef, newItem);
       setItem("");
-      localStorage.setItem("familyShoppingList", JSON.stringify(newList));
     }
   };
+
+  // Listen for real-time updates from Firebase
+  useEffect(() => {
+    const listRef = ref(db, 'familyShoppingList');
+    const unsubscribe = onValue(listRef, (snapshot) => {
+      const data = snapshot.val();
+      const arr = data ? Object.values(data) : [];
+      setList(arr);
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="container">
