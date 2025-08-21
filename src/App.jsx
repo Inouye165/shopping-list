@@ -10,11 +10,11 @@ function App() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (login.username === "ron" && login.password === "dobby") {
-      setUser({ id: "ron", email: "ron@example.com" });
+    if ((login.username === "ron" || login.username === "tricia") && login.password === "dobby") {
+      setUser({ id: login.username, email: login.username + "@example.com" });
       setError("");
       // Optionally fetch list from localStorage
-      const saved = localStorage.getItem("shoppingList_ron");
+      const saved = localStorage.getItem("shoppingList_" + login.username);
       setList(saved ? JSON.parse(saved) : []);
     } else {
       setError("Invalid credentials");
@@ -32,7 +32,7 @@ function App() {
       const newList = [...list, item];
       setList(newList);
       setItem("");
-      localStorage.setItem("shoppingList_ron", JSON.stringify(newList));
+      localStorage.setItem("shoppingList_" + user.id, JSON.stringify(newList));
     }
   };
 
