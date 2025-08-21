@@ -1,0 +1,90 @@
+
+import { useState } from 'react';
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [list, setList] = useState([]);
+  const [item, setItem] = useState("");
+  const [login, setLogin] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (login.username === "ron" && login.password === "dobby") {
+      setUser({ id: "ron", email: "ron@example.com" });
+      setError("");
+      // Optionally fetch list from localStorage
+      const saved = localStorage.getItem("shoppingList_ron");
+      setList(saved ? JSON.parse(saved) : []);
+    } else {
+      setError("Invalid credentials");
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setList([]);
+    setLogin({ username: "", password: "" });
+  };
+
+  const handleAddItem = () => {
+    if (item.trim() && user) {
+      const newList = [...list, item];
+      setList(newList);
+      setItem("");
+      localStorage.setItem("shoppingList_ron", JSON.stringify(newList));
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1>Home Shopping List</h1>
+      {!user ? (
+        <form onSubmit={handleLogin} style={{ maxWidth: 300, margin: "2em auto" }}>
+          <div>
+            <label>Username:</label>
+            <input
+              type="text"
+              value={login.username}
+              onChange={e => setLogin({ ...login, username: e.target.value })}
+              autoFocus
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={login.password}
+              onChange={e => setLogin({ ...login, password: e.target.value })}
+            />
+          </div>
+          <button type="submit">Sign In</button>
+          {error && <div style={{ color: "red" }}>{error}</div>}
+        </form>
+      ) : (
+        <>
+          <div>
+            <span>Signed in as {user.email}</span>
+            <button onClick={handleLogout} style={{ marginLeft: '1em' }}>Sign Out</button>
+          </div>
+          <div className="list-section">
+            <input
+              type="text"
+              value={item}
+              onChange={e => setItem(e.target.value)}
+              placeholder="Add item..."
+            />
+            <button onClick={handleAddItem}>Add</button>
+            <ul>
+              {list.map((li, idx) => (
+                <li key={idx}>{li}</li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default App;
