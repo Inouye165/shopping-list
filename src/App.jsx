@@ -13,8 +13,8 @@ function App() {
     if ((login.username === "ron" || login.username === "tricia") && login.password === "dobby") {
       setUser({ id: login.username, email: login.username + "@example.com" });
       setError("");
-      // Optionally fetch list from localStorage
-      const saved = localStorage.getItem("shoppingList_" + login.username);
+      // Fetch shared family list from localStorage
+      const saved = localStorage.getItem("familyShoppingList");
       setList(saved ? JSON.parse(saved) : []);
     } else {
       setError("Invalid credentials");
@@ -29,10 +29,10 @@ function App() {
 
   const handleAddItem = () => {
     if (item.trim() && user) {
-      const newList = [...list, item];
+      const newList = [...list, { text: item, addedBy: user.id }];
       setList(newList);
       setItem("");
-      localStorage.setItem("shoppingList_" + user.id, JSON.stringify(newList));
+      localStorage.setItem("familyShoppingList", JSON.stringify(newList));
     }
   };
 
@@ -77,7 +77,9 @@ function App() {
             <button onClick={handleAddItem}>Add</button>
             <ul>
               {list.map((li, idx) => (
-                <li key={idx}>{li}</li>
+                <li key={idx}>
+                  {li.text} <span style={{color: '#888', fontSize: '0.9em'}}>({li.addedBy})</span>
+                </li>
               ))}
             </ul>
           </div>
