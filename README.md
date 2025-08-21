@@ -1,28 +1,67 @@
-# React + Vite
-[Netlify Identity & Functions Setup]
 
-1. Add Netlify Identity widget for user sign-in.
-2. Create Netlify Functions for shopping list persistence.
-3. Update React app to use authentication and fetch/save list data.
+# Home Shopping List
 
----
+Real-time shared shopping list for a household (demo users Ron & Tricia) built with React (Vite) + Firebase Realtime Database.
 
-## Next Steps
-- Install netlify-identity-widget
-- Create `netlify/functions` folder for serverless functions
-- Update UI for sign-in and shopping list
+## Features
+- Demo auth (ron / tricia, password: dobby) – replace later with real auth
+- Real-time sync (Firebase Realtime Database)
+- Add / complete / delete items
+- Grouped: incomplete first, collapsible completed section
+- Clear completed
+- Remaining counter & offline indicator
+- Theme cycle: system → light → dark (persisted)
+- Session persistence (localStorage)
+- Accessible (labels, focus rings, keyboard add on Enter)
+- Mobile friendly with sticky add bar
 
----
+## Quick Start
+```bash
+npm install
+npm run dev
+```
+Visit: http://localhost:5173
 
-This README will be updated as features are added.
+## Build & Preview
+```bash
+npm run build
+npm run preview
+```
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Deploy to Netlify
+1. Connect repo in Netlify.
+2. Build command: `npm run build`
+3. Publish directory: `dist`
+4. (Optional later) Move Firebase keys to environment variables.
 
-Currently, two official plugins are available:
+## Firebase Config
+Located in `src/firebase.js`. For production security, expose keys via Vite env variables:
+```
+VITE_FIREBASE_API_KEY=...
+```
+Then in code: `apiKey: import.meta.env.VITE_FIREBASE_API_KEY`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Scripts
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` / `npm start` | Dev server |
+| `npm run build` | Production build |
+| `npm run preview` | Preview dist locally |
+| `npm run lint` | Lint code |
 
-## Expanding the ESLint configuration
+## Tech Stack
+- React 19 + Vite
+- Firebase Realtime Database
+- Vanilla CSS (design tokens + responsive layout)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Roadmap Ideas
+- Replace demo auth with Firebase Auth or Netlify Identity
+- Undo (snackbar) + soft delete window
+- Quantity / notes per item
+- Drag & drop reorder
+- Per-user color theming
+- PWA: offline cache + install prompt
+- Unit tests (React Testing Library) & integration tests
+
+## License
+MIT – personal demo project.
